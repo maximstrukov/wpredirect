@@ -1,0 +1,354 @@
+<?php
+
+$message = '';
+if (!empty($_SESSION['message'])) {
+    $message = join('<br />', $_SESSION['message']['text']);
+    $messageStyle = $_SESSION['message']['type'];
+    unset($_SESSION['message']);
+}
+?>
+<script>
+    $(document).ready(function() {
+        _init();
+        <?php if ($openDialogId > 0): ?>
+                    openEditDialog(<?php echo $openDialogId ?>);
+        <?php endif; ?>
+    } ); //end of  $(document).ready(function() {
+</script>     
+
+<?php echo $this->viewPartial('editimagetool'); ?>
+<!--a href="javascript:testik();">next</a-->
+<div class="content">
+<?php if (!empty($message)) : ?>
+        <div class="message <?php echo $messageStyle; ?>" >
+        <?php echo $message; ?>                
+        </div>
+        <?php endif; ?>
+    <input type="button" id="add_button" value="CREATE NEW RECORD">
+<div id="project_tabs">
+    <a href="javascript:void(0)" _id="0" <?php if ($active_project==0) echo 'class="active"'; ?>>All</a>
+    <?php foreach ($projects as $project): ?>
+        <a href="javascript:void(0)" _id="<?php echo $project['id'] ?>" <?php if ($project['id']==$active_project) echo 'class="active"'; ?>><?php echo $project['name']; ?></a>
+    <?php endforeach; ?>
+    <div class="clear"></div>
+</div>
+<table class="top_filters">
+    <tr>
+        <td style="width:437px">
+            <div style="width:200px;">
+                <span>filter by:</span>
+                <select style="width:170px;" class="domain_filter" >
+                    <option value="">Show all sites</option>
+                    <?php $cnt = 0; foreach($sitesData as $sData) { ?>
+                        <option value="<?php echo $sData['id']; ?>" <?php echo ($cnt==0 || ($sData['id']==7 && $_SERVER["SERVER_NAME"]=="wpredirect.loc")) ? 'selected' : ''; ?> >http://<?php echo $sData['domain']; ?></option>
+                    <?php $cnt = 1; } ?>
+                </select>
+            </div>
+        </td>
+        <td style="width:451px">
+            <div style="width:210px">
+                <span>filter by:</span>
+                <select style="width: 156px;" class="categories_filter" >
+                    <option value="">Show all categories</option>
+                    <?php foreach($catData as $cData) { ?>
+                    <option value="<?php echo $cData['category_id'].'#'.$cData['site_id']; ?>">[http://<?php echo $cData['site_name']; ?>] <?php echo $cData['category_name']; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </td>
+        <td>
+            <div>
+                <span>filter by:</span>
+                <select style="width: 70px;" class="visible_filter">
+                    <option value="">All</option>
+                    <option value="1">Shown</option>
+                    <option value="0">Hidden</option>
+                </select>
+            </div>
+        </td>
+    </tr>
+</table>
+    <table id="table1" class="display" >
+        <thead>
+            <tr>
+                <th>Site address</th>
+                <th>Campaign name</th>
+                <th>Country</th>
+<!--                <th>Exception IPs</th>-->
+<!--                <th>Exception Time</th>-->
+                <th style="width: 300px;">Categories</th>
+                <th>Parameterized URL</th>
+                <th>Role</th>                
+                <th>Show/hide</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+            <th id="site_filter">
+                filter by: 
+                <select style="width:170px;" class="domain_filter" >
+                    <option value="">Show all sites</option>
+                    <?php $cnt = 0; foreach($sitesData as $sData) { ?>
+                        <option value="<?php echo $sData['id']; ?>" <?php echo ($cnt==0 || ($sData['id']==7 && $_SERVER["SERVER_NAME"]=="wpredirect.loc")) ? 'selected' : ''; ?> >http://<?php echo $sData['domain']; ?></option>
+                    <?php $cnt = 1; } ?>
+                </select>
+            </th>
+            <th>                
+            </th>
+            <th></th>
+            <th>
+                filter by: 
+                <select style="width: 156px;" class="categories_filter" >
+                    <option value="">Show all categories</option>
+                    <?php foreach($catData as $cData) { ?>
+                    <option value="<?php echo $cData['category_id'].'#'.$cData['site_id']; ?>">[http://<?php echo $cData['site_name']; ?>] <?php echo $cData['category_name']; ?></option>
+                    <?php } ?>
+                </select>                
+            </th>
+            <th></th>
+            <th></th>
+            <th>
+                filter by: 
+                <select style="width: 70px;" class="visible_filter">
+                    <option value="">All</option>
+                    <option value="1">Shown</option>
+                    <option value="0">Hidden</option>
+                </select>                                
+            </th>
+            <th>
+            </th>
+        </tfoot>
+    </table>
+</div>
+
+<div id="edit_dialog" style="display: none">
+    <form action="index.php?act=save" method="post" enctype="multipart/form-data" id="edit_form">
+        
+        <!-- fields for crop image -->
+        <input type="hidden" id="x1" name="_x1" value=""/>
+        <input type="hidden" id="y1" name="_y1" value="" />
+        <input type="hidden" id="w" name="_w" value="" />
+        <input type="hidden" id="h" name="_h" value="" />
+        <input type="hidden" id="scale" name="_scale" value=""/>
+        <input type="hidden" id="changedSize" name="_changedSize" value=""/>
+        <input type="hidden" id="img_raw" name="_img_raw" value=""/>
+        <!-- end fields for crop image -->
+        
+        <input type="hidden" id="url_id" name="id" value="">
+        <div>
+            <label for="role">Role: </label>
+            <select id="role" name="role" class="edit_dialog">
+            </select>
+            <div class="site_errors" id="role_errors" ></div>
+        </div>                
+        <div>
+            <label for="sites">Select a site: </label>
+            <select id="sites" name="sites" class="edit_dialog">
+                <option>select site</option>
+            </select>
+            <div class="site_errors" id="sites_errors" ></div>
+        </div>        
+        <div>
+            <label for="name">Advertiser name: </label>
+            <input type="text" id="name"  name="name" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+        </div>
+        <!--<div>
+            <label for="site_category">Category: </label>
+            <select id="site_category" name="site_category[]" disabled="disabled" class="edit_dialog category_select">
+                <option value="">Select Category</option>
+            </select>
+            <img id="category_indicator" src="/images/indicator.gif" class ="ajax_indecator" style="display:none;"/>
+            <div class="site_errors" id="site_category_errors" ></div>
+        </div>-->
+        <hr/>
+        <div class="category_set">
+            <div class="add_root_cat" style="display:none"><a href="javascript:void(0)">Add</a></div>
+            <div class="category_block">
+                <div class="category_unit">
+                    <label for="site_category">Category: </label>
+                    <select name="site_category[]" disabled="disabled" class="edit_dialog category_select root_category">
+                    <option value="">Select Category</option>
+                    </select>
+                    <img src="/images/indicator.gif" class="ajax_indecator category_indicator" style="display:none;"/>
+                    <div class="site_errors"></div>
+                </div>
+            </div>
+        </div>
+        
+        <hr/>
+        <br />
+        <div id ="category_manager">
+            <label for="cat_manag" >Set categories: </label>
+            <input id="cat_manag" class="site_button" type="button" value="Category manager" name=""></input>
+        </div>    
+        <hr/>
+        <div style ="display:none;">
+            <label for="logo_link">Upload logo by URL: </label>
+                <input id="logo_link" type="text" name="logo_link" class="edit_dialog" />
+        </div>
+        <div>
+            <label for="myfile">Select logo <span id="dimensions"><br />(<span id="logo_width">250</span> x <span id="logo_height">150</span>)</span> : </label>
+<!--                <input type="file" id="myfile" name="myfile" />-->
+                <div style="display:block;">
+                    <input class="site_button" type="button" value="Image tool" id="image_tool"/>
+                </div>                
+            <div class="site_errors" id="myfile_errors" ></div>
+            <br />
+            <div id ="logo_image_wrap" width="100" heigh="100">
+                <img id="logo_image" src="" />
+            </div>
+        </div>
+       
+        <hr/>
+        
+        <div>
+            <label for="description">Description: </label>
+            <textarea id="description" name="description" class="edit_dialog"  ></textarea> 
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <br />
+            <label for="desc_logo"> Include logo into description: </label>
+            <input type="checkbox" id="desc_logo" name="desc_logo" value="put" checked="unchecked" title="Show logo in the description" /> <!-- checked="checked" -->
+            <br />
+            <br />  
+            <label for="email_param">Email parameter: </label>
+                <input id="email_param" type="text" name="email_param" style="width:120px;" class="edit_dialog"/>
+        </div> 
+        <hr/> 
+        
+    <div id="isp_block" >    
+        
+        <div id ="redirect_url_block">
+            <!-- Redirect Url -->
+            <label for="redirect_url">Competitor URL: </label> 
+            <input type="text" id="redirect_url"  name="redirect_url" class="edit_dialog" <?php if ($_SERVER["SERVER_NAME"]=="wpredirect.loc" && $openDialogId==0) echo ' value="http://competitor'.time().'.com"'; ?>/>
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            
+        </div>
+        <hr/>
+        
+        <div>
+            <label for="template" >Exception Template: </label>
+            <select id="template" name="template_id" style="width:200px;" >
+                <option value="">none</option>
+                <?php foreach($templatesData as $tData) { ?>
+                    <option value="<?php echo $tData['id']; ?>"><?php echo $tData['name']; ?></option>
+                <?php } ?>
+            </select>
+        </div>           
+        <div id="exception_country_wrap">
+            <label for="exception_country">Country: </label>
+            <select id="exception_country" name="exception_country" class="edit_dialog">
+                <option value="-1">Select Country</option>
+<?php foreach ($countryCodes as $code): ?>
+                    <option value="<?php echo $code['country_code']; ?>"><?php echo $code['country_code']; ?> - <?php echo $code['country_name']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+ 
+        <div>
+            <table id="exception_isp_table" class="display"  class="edit_dialog">
+                <thead>
+                    <tr>
+                        <th>ISP name</th>
+                        <th>IPs</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="management_isp" >
+            <div style="float:left;">
+                Show:
+                <input type="checkbox" id="show_unselected" value="unselected" checked="checked" title="Show available" onchange="refreshISPTable()"/> <span  class="ui-icon ui-icon-plus"  style="float: right;"></span>
+            </div>
+            <div style="float:left;">
+                <input type="checkbox" id="show_selected" value="selected" checked="checked" title="Show selected" onchange="refreshISPTable()"/> <span  class="ui-icon ui-icon-check" style="float: right;"></span>
+            </div>
+            <div style="float:right;">
+                <input type="button" id="button_unselect_isp" value="Un-select All Searched"/>
+                <input type="button" id="button_select_isp" value="Select All Searched"/>
+                <input type="button" id="button_clear_isp" value="Clear All"/>
+                <input type="button" id="select_all_isp" style="width:68px;"value="Select All"/>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+        <div id="select_ips_count_wrap">
+            <label for="magic_name" >Count of ISP: </label>
+            <input id="select_ips_count" type="text" value="" style="width:40px;" name="select_ips_count"></input>
+            <input id="select_ips_button" class="site_button" type="button" value="Select" name=""></input>
+        </div>
+        <div>
+            <label for="exception_ips">Exception IPs: </label>
+            <textarea id="exception_ips" name="ips" placeholder="Add IPs" class="edit_dialog"></textarea>
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+        </div>
+        <div>
+            <label for="exception_ips">Exception time (GMT): </label>
+            <select id="start" name="start" >
+<?php foreach ($time_options as $time): ?>
+                    <option value="<?php echo $time; ?>"><?php echo $time; ?></option>
+                <?php endforeach; ?>
+            </select>
+            -
+            <select id="end" name="end" >
+<?php foreach ($time_options as $time): ?>
+                    <option value="<?php echo $time; ?>"><?php echo $time; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+        </div>
+        
+        <div>
+            <label for="blacklist" >Blacklist: </label>
+            <select id="blacklist" name="blacklist_id" style="width:200px;" >
+                <option value="">none</option>
+                <?php foreach($blacklistData as $bData) { ?>
+                    <option value="<?php echo $bData['id']; ?>"><?php echo $bData['name']; ?></option>
+                <?php } ?>
+            </select>
+        </div>           
+    <!-- end isp_block-->
+    </div>
+        
+
+        <div>
+            <label for="featured_post"> Featured post: </label>
+            <input type="checkbox" id="featured_post" name="featured_post" value="put" title="Set that post like a featured." /> <!-- checked="checked" checked="unchecked" -->
+        </div>
+        <hr />
+        <div>
+            <!-- Exception URL -->
+            <label for="exception_url">Tracking URL: </label>
+            <input type="text" id="exception_url"  name="exception_url" class="edit_dialog" <?php if ($_SERVER["SERVER_NAME"]=="wpredirect.loc" && $openDialogId==0) echo ' value="http://tracking'.time().'.com"'; ?>/>
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            
+            <!-- Exception URL 2  -->
+            <label for="exception_url2">Tracking URL(2): </label>
+            <input type="text" id="exception_url2"  name="exception_url2" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            
+            <!-- Show IFrame  -->
+            <div class="clear"></div>
+            <br/>
+            <label for="show_iframe">Show iFrame: </label>
+            <input type="checkbox" id="show_iframe" name="show_iframe" title="Show iFrame in Post" /> <!-- checked="checked" -->
+            <br/>
+            
+            <div class="site_errors" id="post_errors" ></div>  
+        </div>
+    </form>
+</div>
+
+<div id="delete_dialog">
+    <form action="index.php?act=delete" method="post" id="delete_form">
+        <input type="hidden" id="del_url_id" name="id" value="">
+        <div>
+            Are you sure?
+        </div>
+    </form>
+</div>
+
+<?php echo $this->viewPartial('editcategory'); ?>

@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Only for administrator"
+AuthUserFile  /home/rtest/sites/rtest.p.webdevs.com/public/admin/.htpasswd
+require valid-user

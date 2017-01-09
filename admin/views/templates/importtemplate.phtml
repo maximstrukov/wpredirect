@@ -1,0 +1,28 @@
+<script>
+    $('#apply_data').click(function(){
+        
+        showLoader('Importing data...');
+        return true;
+    }); 
+</script>
+
+<div style="text-align: center;">
+    <h3>Assign template to advertiser from *.csv file </h3> 
+</div>
+
+<div style="color: red;">
+    <?php echo ($error)? $error : ''; ?>
+</div>
+
+<div style ="clear: both;"></div>
+<br />
+
+<form action="" method="POST" enctype="multipart/form-data" >
+    Choose a *.csv file to upload: <br />
+    <input name="uploadedfile" type="file">
+    <input type="submit" id="apply_data" value="Apply data from file">
+</form>
+
+<div style="color: lightseagreen;">
+   <?php echo ($result)? $result : ''; ?>
+</div>

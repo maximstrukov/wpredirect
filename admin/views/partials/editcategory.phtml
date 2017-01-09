@@ -1,0 +1,44 @@
+<div id="edit_categories_dialog">
+    <form action="index.php?cont=site&act=save" method="post" id="edit_category_form">
+        
+        <input type="hidden" id="site_id" name="site_id" value="">
+
+        <div class="site_edit_category_caption">Category management</div>
+            
+        <div id="categories" class="site_edit_categories">
+            
+            <div>              
+                <!-- tree  -->
+                    <ul id="gray" class="treeview-gray" parent="0">
+                    </ul>                 
+                <!-- /tree  -->
+            </div>
+            
+            <hr />
+                <div>
+                    <label for="manag_site_category">Selected category: </label>
+                    [ <span id="manag_site_category" disabled="disabled" class="edit_dialog" style="width:199px;"> None </span> ]
+                    <input id="del_category" class="site_button" type="button" value="Delete" name=""/>
+                    <img id="part_category_indicator" src="/images/indicator.gif" class ="ajax_indecator"/> 
+                </div>
+                <div class="edit_cat_block">
+                    <label for="add_sub">Edit ​​category: </label>
+                    <input type="text" value="" id="edit_category" />
+                    <input id="save_category" class="site_button" type="button" value="Save" name=""></input>
+                </div>
+                <hr />
+                <div>
+                    <label for="add_sub">Add sub ​​category: </label>
+                    <input type="text" value="" name="add_sub" ></input>
+                    <input id="add_sub" class="site_button" type="button" value="Add" name=""></input>
+                </div>
+            <hr />
+            <div>
+                <label for="country">New root category: </label>
+                <input type="text" value="" name="root_name"></input>
+                <input id="create_category" class="site_button" type="button" value="Create" name=""></input>
+                <img id="create_category_indicator" src="/images/indicator.gif" class ="ajax_indecator"/> 
+            </div>            
+        </div>
+    </form>
+</div>

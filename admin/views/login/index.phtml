@@ -1,0 +1,44 @@
+<?php 
+//echo '<pre>';
+//print_r($error);
+//die(); 
+?>
+
+<div class="content">
+    <form action="" method="POST">
+        
+        <div style="margin-left: 40%; margin-top:10%">
+            <table>
+                <tr>
+                    <td>
+                        <label for="email" >Email:</label>
+                    </td>                    
+                    <td>
+                        <input type="text" value="" id="email" name="email"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="pass" >Password:</label>
+                    </td>                    
+                    <td>                    
+                        <input type="password" value="" id="pass" name="pass"/>
+                    </td>
+                </tr>  
+                <?php if ($error): ?>
+                            <tr style="color:red;">
+                                <td></td>
+                                <td>Invalid email or password.</td>
+                            </tr>
+                <?php endif; ?>
+                <tr>
+                    <td>                    
+                    </td>
+                    <td>            
+                        <input type="submit" value="Login" name="Login"/>
+                    </td>
+                </tr>           
+            </table>
+        </div>
+    </form>
+</div>

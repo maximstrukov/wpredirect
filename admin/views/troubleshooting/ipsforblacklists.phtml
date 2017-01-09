@@ -1,0 +1,28 @@
+<div class="content">
+
+    <div style="text-align: center; font-size: 21px; margin-bottom: 12px;">
+        IP's for blacklists
+    </div>
+
+    <form action="index.php?cont=stat&act=ipinfo2" method="POST" >
+
+        <label for="sites">Site:</label>
+        <select id="sites" name="site" style ="margin-bottom: 20px;">
+            <option value="" >All sites(*)</option>
+            <?php if($sites) { 
+                foreach ($sites as $site) { ?> 
+                    <option value="<?php echo $site['domain']; ?>"><?php echo $site['domain']; ?></option>
+            <?php }
+            } ?>
+        </select>
+        
+        <br />
+        
+        <label for="list">Tracking Url's:</label>
+        <br />
+        <textarea style="margin-left: 100px; margin-top: -16px; margin-bottom:10px; width: 809px; height: 93px;" id="list" name ="list" ></textarea> 
+        <br />
+        
+        <input style="float:right;" type="submit" value="Get IP's" />
+    </form>
+</div>    

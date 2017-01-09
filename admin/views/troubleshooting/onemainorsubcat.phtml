@@ -1,0 +1,53 @@
+<script>
+    $(document).ready(function(){
+        $('#sites').change(
+            function(){
+                //var site_id = $(this).val(); 
+                $('#onemainorsubcat_form').submit(); 
+            }   
+        );
+    });
+</script>
+
+<div class="content">
+
+    <div style="text-align: center; font-size: 21px; margin-bottom: 12px;" title='Advertisers which have only one "sub" or "root" category.'>
+        Advertisers with wrong categories.
+    </div>
+    
+    <form id="onemainorsubcat_form" action="" method="POST">
+    <!-- additional filter by mini-site -->
+    <?php if(!empty($all_sites)) { ?>
+    <label for="sites">Site: </label>
+        <select name="site_id" id="sites" style ="margin-bottom:20px;">
+            <option value = "all"<?php if ($site_id=="all") echo " selected"; ?>>all</option>
+            <option value = ""<?php if ($site_id=="") echo " selected"; ?>>none</option>
+            <?php foreach($all_sites as $sData) { ?>
+                <option value="<?php echo $sData['id']; ?>" <?php if($site_id == $sData['id']) {?>selected<?php } ?> ><?php echo $sData['domain']; ?></option>
+            <?php } ?>
+        </select>
+    <?php } ?> <br />
+    </form>
+    
+    <table id="onemainorsubcat_table" class="display" >
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Advertiser</th>
+                <th>Parametrized URL</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if(!empty($data)) { $cnt=1; foreach ($data as $aItem) { ?>
+                <tr>
+                    <td><?php echo $cnt; ?></td>
+                    <td><?php echo $aItem['name']; ?></td>
+                    <td><?php echo $aItem['param_url']; ?></td>
+                    <td><a target="_blank" href="index.php?cont=campaign&act=index&id=<?php echo $aItem['id']; ?>" class="edit" >edit</a></td>
+                </tr>    
+            <?php $cnt++; }
+            }?>
+        </tbody>
+    </table>
+</div>

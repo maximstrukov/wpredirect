@@ -1,0 +1,28 @@
+<div class="content">
+
+    <div style="text-align: center; font-size: 21px; margin-bottom: 12px;" title='Advertisers which have only one "sub" or "root" category.'>
+        Advertisers with black logos.
+    </div>
+    
+    <table id="onemainorsubcat_table" class="display">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Site</th>
+                <th>Advertiser</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if(!empty($data)) { $cnt=1; foreach ($data as $aItem) { ?>
+                <tr>
+                    <td><?php echo $cnt; ?></td>
+                    <td><?php echo $aItem['domain']; ?></td>
+                    <td><a href="<?php echo "http://".$aItem['domain']."?p=".$aItem['wp_post_id']; ?>" target="_blank"><?php echo $aItem['name']; ?></a></td>
+                    <td><a target="_blank" href="index.php?cont=campaign&act=index&id=<?php echo $aItem['url_id']; ?>" class="edit" >edit</a></td>
+                </tr>
+            <?php $cnt++; }
+            }?>
+        </tbody>
+    </table>
+</div>

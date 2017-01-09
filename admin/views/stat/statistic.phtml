@@ -1,0 +1,95 @@
+
+<script type="Text/JavaScript">
+$(function(){    
+    
+    $('#sites').change(
+        function(){
+            $('#advertisers').html('');
+            var site_id = $(this).val();
+            showLoader('getting advertisers');
+            $.ajax({
+                type: 'POST',
+                url: 'index.php?cont=stat&act=geturlsbysiteid',
+
+                data:{
+                    site_id: site_id
+                },
+
+                dataType:'json',
+
+                success:function(result) {
+
+                    if(!jQuery.isEmptyObject(result)) {
+                        
+                        for (key in result) {
+                            $('#advertisers')
+                                .append($("<option></option>")
+                                .attr("value",result[key].id)
+                                .text(result[key].name));
+                        }
+                    }
+                    else {
+                        
+                        $('#advertisers')
+                            .append($("<option></option>")
+                            .attr("value",'')
+                            .text('none'));
+                    }
+                },
+
+                complete: function() {
+                    hideLoader();
+                }
+            });            
+        }
+    );
+        
+});
+</script>    
+
+<form id="advertiser_id" method="POST" action="" >
+    
+    <?php if(!empty($all_sites)) { ?>
+    <label for="sites">Site: </label>
+        <select name="site_id" id="sites" >
+            <?php foreach($all_sites as $sData) { ?>
+                <option value="<?php echo $sData['id']; ?>" <?php if($site_id == $sData['id']) {?>selected<?php } ?> ><?php echo $sData['domain']; ?></option>
+            <?php } ?>
+        </select>
+    <?php } ?>
+    
+    <?php if(!empty($advertisers)) { ?>
+    <label for="advertisers" style="margin-left: 28px;">Advertiser: </label>
+        <select name="url_id" id="advertisers" style="width: 328px;" >
+            <?php foreach($advertisers as $aData) { ?>
+                <option value="<?php echo $aData['id']; ?>" <?php if($url_id == $aData['id']) {?>selected<?php } ?> ><?php echo $aData['name']; ?></option>
+            <?php } ?>
+        </select>
+    <?php } ?>
+    
+    <input style="margin-left: 28px;" type="submit" value="RUN">
+</form>
+<br />
+
+<?php if(!empty($result)) { ?>
+    <table style="width: 980px; border: dotted #4297d7;" >
+    <tr>
+        <td>IP</td>
+        <td>ISP</td>
+        <td>DATE</td>
+    </tr>    
+        <?php foreach($result as $rData) { ?>
+            <tr>
+                <td>
+                    <?php echo $rData['ip']; ?>
+                </td>
+                <td>
+                    <?php echo $rData['isp']; ?>
+                </td>
+                <td>
+                    <?php echo $rData['date']; ?>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+<?php } ?>

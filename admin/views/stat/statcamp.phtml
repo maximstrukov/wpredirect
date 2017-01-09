@@ -1,0 +1,217 @@
+<script>
+    $(document).ready(function(){
+        $('#range').daterangepicker({  
+            presets: { dateRange: 'Date Range'},  
+            dateFormat: "yy-mm-dd",            
+            //earliestDate: Date.parse("-1 month"),  
+            earliestDate: Date.parse("Oct 1, 2012"),
+            latestDate: 'Today'  
+        });
+
+        $('#sites').change(
+            function(){
+                $('#campaign_id').html('');
+                var site_id = $(this).val();
+                showLoader('getting advertisers');
+                
+                $('#campaign_id')
+                    .append($("<option></option>")
+                    .attr("value",'-1')
+                    .text('Summary')); 
+                
+                $.ajax({
+                    type: 'POST',
+                    url: 'index.php?cont=stat&act=geturlsbysiteid',
+
+                    data:{
+                        site_id: site_id
+                    },
+
+                    dataType:'json',
+
+                    success:function(result) {
+
+                        if(!jQuery.isEmptyObject(result)) {
+
+                            for (key in result) {
+                                $('#campaign_id')
+                                    .append($("<option></option>")
+                                    .attr("value",result[key].id)
+                                    .text(result[key].name+' ['+result[key].domain+']'));
+                            }
+                        }
+                    },
+
+                    complete: function() {
+                        hideLoader();
+                    }
+                });            
+            }
+        );
+
+    });
+</script>
+
+<?php
+$message = '';
+if (!empty($_SESSION['message'])) {
+    $message = join('<br />', $_SESSION['message']['text']);
+    $messageStyle = $_SESSION['message']['type'];
+    unset($_SESSION['message']);
+}
+?>
+ <style>
+    #edit_dialog label{
+        width:170px;
+        float: left;
+    }
+    #edit_dialog input,#edit_dialog textarea{
+        width:310px;
+    }
+    .error {
+        background-color: #FCC;
+    }
+
+    #edit_form div{
+        padding-bottom: 5px;
+    }
+
+    hr{
+        border: 0;
+        background-color:  #A6C9E2;
+        height: 1px;
+    }
+
+    .ui-icon-cancel, .ui-icon-close {
+        cursor: pointer;
+    }
+</style>
+
+<?php if (!empty($message)) :?>
+<div class="message <?php echo $messageStyle; ?>" >
+    <?php echo $message; ?>                
+</div>
+<?php endif; ?>
+
+
+<div>
+    <form id="date_form">
+        
+        <!-- additional filter by mini-site -->
+        <?php if(!empty($all_sites)) { ?>
+        <label for="sites">Site: </label>
+            <select name="site_id" id="sites" style ="margin-bottom:20px;">
+                <option value ="" >All sites</option>
+                <?php foreach($all_sites as $sData) { ?>
+                    <option value="<?php echo $sData['id']; ?>" <?php if($site_id == $sData['id']) {?>selected<?php } ?> ><?php echo $sData['domain']; ?></option>
+                <?php } ?>
+            </select>
+        <?php } ?> <br />       
+        
+        
+        <input type="hidden" name="cont" value="stat">
+        <input type="hidden" name="act" value="statcamp">
+        <label for="range">Set date range: </label>
+        <input id="range" type="text" name="range" value="<?php echo isset($settime) ? $settime : '' ; ?>"/>
+        <input id="start" type="hidden" name="start" value="<?php echo $start; ?>"/>
+        <input id="end" type="hidden" name="end" value="<?php echo $end; ?>"/>
+        <label for="end">Campaign name: </label>
+        <select id="campaign_id" name="campaign_id" style="width:510px;">
+            <option value="-1">Summary</option>
+            <?php foreach ($campaigns as $campaign): ?>
+                <option value="<?php echo $campaign['id']; ?>" <?php if ($campaign_id == $campaign['id']) echo 'selected="selected"'; ?>><?php echo $campaign['name'].' ['.$campaign['domain'].']'; ?></option>
+            <?php endforeach; ?>
+        </select>
+        
+        <input type="submit" name="submit" value="refresh">
+    </form>
+</div>
+
+<table id="table1" class="display" >
+    <thead>
+        <tr>
+            <th>Day</th>
+            <th>Campaign</th>
+            <th>Competitor Visits</th> <!-- redirects -->
+            <th>Advertiser Visits</th> <!-- exceptions -->
+        </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot>
+        <tr>
+            <th></th>
+            <th></th> 
+            <th>Total visits: <?php echo $redirects; ?></th> 
+            <th>Total visits: <?php echo $exception; ?></th> 
+        </tr> 
+    </tfoot>
+</table>
+<br />
+<?php if(!empty($rGraph)) { ?>
+<div style="margin-top: 64px; width: 100%;">
+    <h1>Statistics for the period:</h1>
+    <script>
+        window.onload = function ()
+        {
+            var line = new RGraph.Line('cvs',
+                    
+                   // [5,4,1,6,8,5,3, 20] // Y - axis
+                   [<?php $cnt1 = 0; foreach ($rGraph as $gItem) { ?>
+                        <?php echo ($cnt1!=0) ? ','.$gItem['cnt'] : $gItem['cnt'] ; ?>
+                   <?php $cnt1++; } ?>]
+        
+                ).Set('labels', 
+                
+                    //['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday', 'label2'] // X - axis 
+                   [<?php $cnt2 = 0; $prev_month = ''; foreach ($rGraph as $gItem) { 
+                       $timestamp = strtotime($gItem['added_date']); 
+                       //$date = date('j,M', $timestamp); 
+                       $day  = date('j', $timestamp); 
+                       $month  = date('M', $timestamp); 
+                       $date = $day.','.$month; 
+                       
+                       if($prev_month == $month) $date = $day; 
+                       else $date = $day.','.$month;
+                    ?>
+                        <?php echo ($cnt2!=0) ? ',"'.$date.'"' : '"'.$date.'"' ; ?>
+                   <?php $cnt2++; $prev_month = $month;} ?>]                    
+                
+                )
+                .Set('chart.gutter.left', 50)
+                .Draw();                    
+        }
+    </script>
+    <script>
+    /* window.onload = function ()
+    {
+        // The data for the Line chart. Multiple lines are specified as seperate arrays.
+        var data = [10,4,17,50,25,19,20,25,30,29,30,29000];
+    
+        // Create the Line chart object. The arguments are the canvas ID and the data array.
+        var line = new RGraph.Line("cvs", data)
+        
+        // The way to specify multiple lines is by giving multiple arrays, like this:
+        // var line = new RGraph.Line("myLine", [4,6,8], [8,4,6], [4,5,3])
+        
+            // Configure the chart to appear as you wish.
+            .Set('chart.background.barcolor1', 'white')
+            .Set('chart.background.barcolor2', 'white')
+            //.Set('chart.background.grid.color', 'rgba(238,238,238,1)')
+            .Set('chart.colors', ['red'])
+            .Set('chart.linewidth', 2)
+            .Set('chart.filled', false)
+            .Set('chart.hmargin', 8)
+            .Set('chart.labels', ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+            .Set('chart.gutter.left', 40)
+        
+            // Now call the .Draw() method to draw the chart.
+            .Draw();
+    } */ 
+</script>
+    
+    <canvas id="cvs" width="998" height="300">[No canvas support]</canvas>
+</div>
+<?php } ?>
+<!--div style="float:right;">
+    <a href="index.php?cont=stat&act=statistic">Statistic by site and advertiser</a>
+</div-->

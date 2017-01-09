@@ -1,0 +1,229 @@
+/* 
+    Document   : ui.css
+    Created on : Sep 30, 2011, 5:07:11 PM
+    Author     : MYem
+    Description:
+        UI css
+*/
+
+
+body {
+    background: #fff;
+	margin:0;
+	padding:0;
+	font:normal 14px/16px Arial, Tahoma, sans-serif;
+}
+
+a {
+	color:#357FD5;
+}
+
+a:hover {
+	color:#2c69b0;
+}
+
+.clear{
+    clear:both;
+}
+
+table {
+	border-collapse:collapse;
+}
+
+.clear.min{
+    font-size: 1px;
+    height: 1px;
+}
+
+div.content {
+    margin: 10px auto; 
+    width: 980px; 
+    min-height: 1000px; 
+    /*border: 2px groove #FFF; */
+    padding: 10px;
+}
+
+.content .message {
+    font-weight: bold;
+    font-size: 1.2em;
+    background-color: #FFFFBB;
+    padding: 5px;
+}
+.content .message.error {
+    color: #F00;
+}
+.content .message.info {
+    color: #289548;
+}
+
+.content .navigation {
+    padding:10px 0;
+	overflow:hidden;
+}
+
+.content .navigation li a{
+    text-decoration:none;
+	color:#fff;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border:1px solid #fff;
+	padding:4px 5px;
+	background-color:#777;
+	display:inline-block;
+}
+
+.content .navigation li a:hover{ 
+	background:#4f4e4e;
+}
+
+.content .navigation .links {
+	float:left;
+	width:655px;
+	margin:0;
+	padding:0;
+	
+}
+
+.content .navigation table.user{
+	width:320px;
+    float: right;
+    font-size: 12px;    
+}
+
+.content .navigation table.user td.header{ 
+	text-transform:capitalize;	
+}
+
+.content .navigation table.user td { 
+	background:#e3e6e8;
+	color:#181818;
+	padding:0 5px;
+	border:2px solid #fff;
+}
+
+.content .navigation ul.links li {
+    float:left;
+    margin-right: 10px;
+    list-style-type: none;
+	
+}
+
+.form textarea {
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border:1px solid #ccc;
+}
+
+.content table {
+	font:normal 14px/16px Arial, Tahoma, sans-serif;
+}
+
+.content table.table-data {
+	width:100%;
+	border:1px solid #515050;
+	border-collapse:collapse;
+}
+.content table.table-data td{ 
+	border:1px solid #515050;
+	padding:5px;	
+}
+
+.content .table-data .header th{
+	background:#515050;
+	color:#fff;
+	font-weight:normal;
+	text-transform:capitalize;
+}
+
+.content table.table-info {	
+	border:1px solid #515050;
+	border-collapse:collapse;
+}
+
+.content .table-info .header th,
+.content .table-info .header td{
+	background:#515050;
+	color:#fff;
+	font-weight:normal;
+	text-transform:capitalize;
+}
+
+.content table.table-info td{ 
+	border:1px solid #515050;
+	padding:5px;
+    vertical-align: top;
+}
+
+.content .navigation ul.links li :first-child {
+	margin:0;
+}
+
+div.form {
+    margin: 0 auto; 
+}
+
+div.form label {
+    float: left;
+    margin-right: 10px;
+    width: 150px;    
+}
+
+.table-review {
+	border-collapse:collapse; 
+}
+
+.table-review.car-list .review2 {
+	vertical-align: top;	
+	border-bottom:1px solid #dfdfdf;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+.form  table{
+	width:100%;
+}
+
+.form  table .header {
+	width:150px;
+	text-transform:capitalize;
+}
+
+.form input.itext{
+	width:380px;
+	border:1px solid #b7b7b7;
+	height:23px;
+	padding:0 10px;
+	line-height:23px;
+}
+
+.form.login input.itext{
+	width:240px;	
+}
+
+
+.spec-box  .item  .left{
+	float:left;
+	width:150px;
+	font-weight:bold;
+	margin:0;
+}
+.spec-box  .item  .right{
+	float:left;
+	width:230px;
+	font-size:13px;
+	line-height:15px;
+	margin:0;
+}
+.spec-box  .item {
+	border-bottom:1px solid #dedede;
+	padding:5px 0;
+	font-size:13px;
+	margin:0;
+}
+
+.paging {
+    text-align: center;
+}

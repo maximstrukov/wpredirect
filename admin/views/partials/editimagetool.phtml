@@ -1,0 +1,42 @@
+<!-- edit image dialog -->
+<div id="edit_image" >
+    <table>
+    <tr>    
+        <td>
+            <div style ="float: left;" >
+                <label for="tool_logo_link">Image URL: </label>
+                    <input id="file-url" type="text" name="url" placeholder="E.g. http://esprit.co.uk/logo.png" class="edit_dialog" style="width: 350px;" />
+            </div>
+        </td>
+    </tr>       
+    <tr>       
+        <td>
+            <br />
+            <div style="float:left; margin-right:20px;padding:6px;">OR</div>
+            <div id="file-uploader">
+                <noscript>
+                    <p>Please enable JavaScript to use file uploader.</p>
+                </noscript>
+            </div>            
+        </td>
+    </tr>       
+    <tr>
+        <td>
+            <label>
+                <b style="display: inline">Image preview:<span class="reqired">*</span></b> (<span id="label_width"></span>x<span id="label_height"></span>px is required)
+            </label>  
+            <br />
+            <br />
+            <div id="image-preview-thumb" >
+            </div>
+        </td>            
+    </tr>
+    <tr>
+        <td>
+            <br />
+            <div id="image-preview">
+            </div> 
+        </td>
+    </tr>
+    </table>    
+</div>

@@ -1,0 +1,230 @@
+<?php
+$message = '';
+if (!empty($_SESSION['message'])) {
+    $message = join('<br />', $_SESSION['message']['text']);
+    $messageStyle = $_SESSION['message']['type'];
+    unset($_SESSION['message']);
+}
+?>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        _init();
+        <?php if ($openDialogId > 0): ?>
+            openEditDialog(<?php echo $openDialogId ?>);
+        <?php endif; ?>
+    } );
+</script>
+
+<div class="content">
+<?php if (!empty($message)) : ?>
+        <div class="message <?php echo $messageStyle; ?>" >
+        <?php echo $message; ?>                
+        </div>
+        <?php endif; ?>
+    <input type="button" id="add_button" value="CREATE NEW SITE">
+    <input id="show_site_stat" type="button" value="Site Stat Table" onclick="show_sites_stat()"/>
+    <table id="table1" class="display sites_table" >
+        <thead>
+            <tr>
+                <th>Site Address</th>
+                <th style="width: 61px;" >Status</th>
+                <th style="width: 92px;" >Curl status</th>
+                <th style="width: 75px">&nbsp;</th>
+                <th style="width: 254px;" >Actions</th>
+                <th style="width: 65px; font-size: 12px; padding-right: 10px">Check advertisers</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<br />
+Update "redirectExtend" plugin:
+<hr />
+<form action="index.php?cont=site&act=updateplugin" method=post enctype="multipart/form-data" name=Form>
+    <input type=file name=plugin>
+    <input type=submit value='Update plugin'>
+</form>
+<br />
+<?php if (in_array($_SERVER['REMOTE_ADDR'],array('195.69.134.114','178.150.137.40','127.0.0.1'))):  ?>
+Update "cforder" plugin:
+<hr />
+<form action="index.php?cont=site&act=updateplugin" method=post enctype="multipart/form-data" name=Form>
+    <input type=file name=plugin>
+    <input type=hidden name=ftp_path_cforder value="1">
+    <input type=submit value='Update plugin'>
+</form>
+<?php endif; ?>
+
+<div id="sites_stat">
+</div>
+
+<div id="edit_dialog">
+    <form action="index.php?cont=site&act=save" method="post" id="edit_form">
+        
+        <input type="hidden" id="id" name="id" value="">
+        <div>
+            <label for="name">Domain Url: </label>
+            <input type="text" id="domain"  name="domain" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="domain_errors" style="display: none"></div>
+        </div>
+        <?php if (in_array($_SERVER['REMOTE_ADDR'],array('195.69.134.114','178.150.137.40','127.0.0.1'))):  ?>
+        <div>
+            <label for="enter_url">WP admin login: </label>
+            <input type="text" id="wp_login"  name="wp_login" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="wp_login_errors" ></div>            
+        </div>
+        <div>
+            <label for="enter_url">WP admin password: </label>
+            <input type="text" id="wp_pass"  name="wp_pass" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="wp_pass_errors" ></div>
+        </div>
+        <?php endif; ?>
+        <div class="clear"></div>
+        <div>
+            <label for="country">Country Code: </label>
+            <input type="text" id="country"  name="country" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="country_errors" style="display: none"></div>
+        </div>
+        <div>
+            <label for="logo_width" >Image logo width: </label>
+            <input id="logo_width" type="text" value="" name="logo_width" style="width:100px;"></input> px
+        </div>        
+        
+        <div>
+            <label for="logo_height" >Image logo height: </label>
+            <input id="logo_height" type="text" value="" name="logo_height" style="width:100px;"></input> px
+        </div>                
+        
+        <div id="set_mp" >
+            <label for="magic_name" >Set magic param: </label>
+            <input id="magic_name" type="text" value="" name="magic_name"></input>
+            <input id="set_magic" class="site_button" type="button" value="Set" name=""></input>
+            <!-- magic param for tu2 -->
+            <label for="magic_name2" >Set magic param (for TU2): </label>
+            <input id="magic_name2" type="text" value="" name="magic_name2"></input>
+            <input id="set_magic2" class="site_button" type="button" value="Set" name=""></input>
+        </div>
+        <div style="clear:both;"></div>
+        <div id="permalink_set_wrap" >
+            <label for="permalink_set" >Permalink Type: </label>
+            <select id="permalink_set" name="permalink_set" style="width:200px;" >
+
+            </select>
+            <input id="permalink_button" class="site_button" type="button" value="Set" name=""></input>
+            
+            <label title ="%year% %monthnum% %day% %hour% %minute% %second% %post_id% %postname% %category% %author%" for="permalink_set" >Custom permalink : </label>
+                <input type="text" class="regular-text code" value="" id="permalink_structure" name="permalink_structure" title ="%year% %monthnum% %day% %hour% %minute% %second% %post_id% %postname% %category% %author%" >
+            <input id="custom_permalink_button" class="site_button" type="button" value="Set" name=""></input>            
+            
+            <div style="margin-top:10px;">
+                <label for="use_bl" >Use all Blacklists: </label>
+                <input id="use_bl" class="site_button" type="checkbox" value="1" name="use_bl"></input>
+            </div>
+        </div>
+        
+        <div>
+            <label for="blacklist" >Blacklist: </label>
+            <select id="blacklist" name="blacklist_id" style="width:200px;" >
+                <option value="">none</option>
+                <?php foreach($blacklistData as $bData) { ?>
+                    <option value="<?php echo $bData['id']; ?>"><?php echo $bData['name']; ?></option>
+                <?php } ?>
+            </select>
+        </div>        
+        
+        <div id="set_email_wrap" >
+            <label for="set_email" >Set Email: </label>
+            <input id="set_email" type="text" value="" name="email"></input>
+            <div class="site_errors" id="email_errors" style="display: none"></div>
+        </div>        
+        
+        <div id ="category_manager" >
+            <hr />
+            <label for="cat_manag" >Set categories: </label>
+            <input id="cat_manag" class="site_button" type="button" value="Category manager" name=""></input>
+        </div>
+        <br />
+        FTP settings: 
+        <hr />
+        <div>
+            <label for="name">ftp_host: </label>
+            <input style="float:left; width:241px;" type="text" id="ftp_host"  name="ftp_host" class="edit_dialog">
+             &nbsp;port:<input style="width:28px;" type="text" id="ftp_port" value="21" name="ftp_port" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="ftp_host_errors" style="display: none"></div>
+        </div>        
+        <div>
+            <label for="name">ftp_login: </label>
+            <input type="text" id="ftp_login"  name="ftp_login" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="ftp_login_errors" style="display: none"></div>
+        </div> 
+        <div>
+            <label for="name">ftp_password: </label>
+            <input type="text" id="ftp_pass"  name="ftp_pass" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="ftp_pass_errors" style="display: none"></div>
+        </div>
+        <div>
+            <label for="name">Plugin path (rExtend): </label>
+            <input type="text" id="ftp_path"  name="ftp_path" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="ftp_path_errors" style="display: none"></div>
+        </div>        
+        <div>
+            <label for="name">Plugin path (cforder): </label>
+            <input type="text" id="ftp_path_cforder"  name="ftp_path_cforder" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="ftp_path_errors" style="display: none"></div>
+        </div> 
+        
+        <hr />
+        
+        <div style="margin-top:10px;">
+            <label for="less_strict" > Use less strict settings for this site: </label>
+            <input id="less_strict" class="site_button" type="checkbox" value="1" name="less_strict"></input>
+        </div>
+        
+        <div class="clear"></div>
+        <hr />
+        
+        <div style="margin-top:15px;">
+            <label for="project" > Project: </label>
+            <select id="project" name="project">
+                <?php foreach($projects as $project) { ?>
+                    <option value="<?php echo $project['id']; ?>"><?php echo $project['name']; ?></option>
+                <?php } ?>
+            </select>
+        </div>
+
+        <div class="clear"></div>
+        <hr />
+        
+        <div style="margin-top:10px;">
+            <label for="show_iframe" > Show iFrame: </label>
+            <input id="show_iframe" class="site_button" type="checkbox" name="show_iframe"></input>
+        </div>
+        
+        <div class="clear"></div>        
+        
+    </form>
+</div>
+
+<div id="delete_dialog">
+    <form action="index.php?cont=site&act=delete" method="post" id="delete_form">
+        <input type="hidden" id="del_url_id" name="id" value="">
+        <div>
+            Are you sure?
+        </div>
+    </form>
+</div>
+
+
+<?php echo $this->viewPartial('editcategory', array('myvar' => array('key'=>'val'))); ?>

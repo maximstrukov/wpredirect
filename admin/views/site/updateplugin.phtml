@@ -1,0 +1,47 @@
+<div class="content">
+
+    <div style="text-align: center; font-size: 21px; margin-bottom: 12px;">
+        Result of process plugin updating
+    </div>
+    
+    <a href="index.php?cont=site" ><strong>Back to sites list</strong></a>
+    
+    <div style ="margin-top: 12px;">
+        <table id="missing_table" class="display" >
+            <thead>
+                <tr>
+                    <th>Remote Site</th> 
+                    <th>ftp host</th>
+                    <th>ftp login</th>
+                    <th>ftp password </th>
+                    <th>Status</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($upData as $upItem) {?>
+                    <tr>
+                        <td> 
+                            <?php echo $upItem['domain']; ?>
+                        </td> 
+                        <td>
+                            <?php echo $upItem['ftp_host']; ?>
+                        </td> 
+                        <td>
+                            <?php echo $upItem['ftp_login']; ?>
+                        </td>                     
+                        <td>
+                            <?php echo $upItem['ftp_pass']; ?>
+                        </td> 
+                        <td>
+                            <?php echo $upItem['status']; ?>
+                        </td>                     
+                        <td>
+                            <?php echo $upItem['description']; ?>
+                        </td>                                         
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>

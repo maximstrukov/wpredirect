@@ -1,0 +1,76 @@
+<div class="content">
+
+    <div style="text-align: center; font-size: 21px; margin-bottom: 12px;">
+        Duplication of posts
+    </div>
+
+    <form action="" method="POST" >
+        <select name="checksite" >
+            <option value="http://www.helium.com/">http://www.helium.com/</option>
+        </select>
+        <button id="update_logs" <?php echo ($scanProgress) ? 'disabled=disabled' : '' ; ?> title="check in the background" value="Update logs" >Update logs</button>
+        <input id="show_logs_history" type="submit" value="Show logs" >
+    </form>
+    <br />
+    <?php if($showLogsList) { ?>
+        <table id="logs_table" class="display" >
+            <thead>
+                <tr>
+                    <th>Log name: </th>
+                    <th style="width:136px;" >Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($data as $dItem) { ?>
+                    <tr>
+                        <td>
+                            <?php echo $dItem; ?>
+                        </td>
+                        <td>
+                            <a href="index.php?cont=troubleshooting&act=duplication&log_name=<?php echo $dItem; ?>">Show details</a>
+                            |
+                            <a href="index.php?cont=troubleshooting&act=duplication&log_name=<?php echo $dItem; ?>&delete">Delete</a>
+                        </td>
+                    </tr>  
+                <?php } ?>
+            </tbody>
+        </table>
+    <?php } ?>
+    <?php if($showLogData) { ?>
+        <div style="text-align: center; font-size: 21px; margin-bottom: 12px;">
+            <?php echo $_REQUEST['log_name']; ?>
+        </div>    
+        <table id="logsData_table" class="display" >
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Title</th>
+                    <th>Mini-site</th>
+                    <th>Articles on Mini-site</th>
+                    <th>Articles on helium.com</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $cnt = 1; foreach ($data as $dItem) { ?>
+                    <tr>
+                        <td>
+                            <?php echo $cnt.'.'; ?>
+                        </td>
+                        <td>
+                            <?php echo $dItem['title']; ?>
+                        </td>
+                        <td>
+                            <?php echo $dItem['wpsite']; ?>
+                        </td>
+                        <td>
+                            <?php echo (!empty($dItem['miniSiteLink']) && trim($dItem['miniSiteLink'])!='-') ? '<a target="_blank" href="'.$dItem['miniSiteLink'].'">'.$dItem['miniSiteLink'].'</a>' : $dItem['miniSiteLink']; ?>
+                        </td>
+                        <td>
+                            <?php echo (!empty($dItem['remoteLink']) && trim($dItem['remoteLink'])!='-') ? '<a target="_blank" href="'.$dItem['remoteLink'].'">'.$dItem['remoteLink'].'</a>' : $dItem['remoteLink']; ?>
+                        </td>
+                    </tr>  
+                <?php $cnt++; } ?>
+            </tbody>
+        </table>    
+    <?php } ?>
+</div>

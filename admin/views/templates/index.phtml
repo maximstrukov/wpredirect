@@ -1,0 +1,77 @@
+<div class="content">
+    <input type="button" id="add_button" value="CREATE NEW TEMPLATE">
+
+    <table id="templates_table" class="display" >
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th style="width:80px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+    <div style="float:right;">
+        <a href="index.php?cont=templates&act=importtemplate">Assign templates to advertisers by *.csv file </a>
+    </div>    
+</div>
+
+<div id="edit_dialog">
+    <form action="index.php?cont=templates&act=save" method="post" id="edit_form">
+        
+        <input type="hidden" id="id" name="id" value="">
+        
+        <div>
+            <label for="name">Name: </label>
+            <input type="text" id="name" placeholder="Template name" value=""  name="name" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="name_errors" style="display: none"></div>
+        </div>        
+        
+        <div>
+            <label for="exception_country">Country: </label>
+            <select id="exception_country" name="exception_country" class="edit_dialog">
+                <option value="-1">Select Country</option>
+                <?php foreach ($countryCodes as $code): ?>
+                    <option value="<?php echo $code['country_code']; ?>"><?php echo $code['country_code']; ?> - <?php echo $code['country_name']; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div>
+            <table id="exception_isp_table" class="display"  class="edit_dialog">
+                <thead>
+                    <tr>
+                        <th>ISP name</th>
+                        <th>IPs</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="management_isp" >
+            <div style="float:right;">
+                <input type="button" id="button_unselect_isp" style="margin-right:14px;" value="Un-select All Searched"/>
+                <input type="button" id="button_select_isp" style="margin-right:14px;" value="Select All Searched"/>
+                <input type="button" id="button_clear_isp" style="margin-right:14px;" value="Clear All"/>
+                <input type="button" id="select_all_isp" style="width:68px;margin-right:14px;" value="Select All"/>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+        <div id="select_ips_count_wrap">
+            <label for="magic_name" style="padding: 5px; width: 104px;" >Count of ISP: </label>
+            <input id="select_ips_count" type="text" value="" style="width:40px;" name="select_ips_count"></input>
+            <input id="select_ips_button" class="site_button" type="button" value="Select" name=""></input>
+        </div>        
+             
+    </form>
+</div>
+
+<div id="delete_dialog">
+    <form action="index.php?cont=templates&act=delete" method="post" id="delete_form">
+        <input type="hidden" id="del_templates_id" name="id" value="">
+        <div>
+            Are you sure you want to remove "<span id="templates_name"></span>" template?
+        </div>
+    </form>
+</div>

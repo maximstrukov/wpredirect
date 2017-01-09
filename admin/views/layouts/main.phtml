@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="language" content="en" />
+
+        <title>Redirect Tool</title> 
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        
+        <?php if(isset($_GET['cont']) && $_GET['cont'] == 'stat') { ?>
+            <!--datapicker css and script files -->
+            <script type="text/javascript" src="js/jquery-ui-1.7.1.custom.min.js"></script>   
+            <script type="text/javascript" src="js/daterangepicker.jQuery.js"></script>
+            <link type="text/css" href="css/ui.daterangepicker.css" rel="Stylesheet" />
+            <link type="text/css" href="css/jquery-ui.css" rel="Stylesheet" />
+            <!--datapicker css and script files -->
+        <?php } ?>
+        
+        <script type="text/javascript" src="js/global.js"></script>
+        
+        <link type="text/css" href="css/smoothness/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />
+
+        <link type="text/css" href="css/demo_page.css" rel="Stylesheet" />
+        <link type="text/css" href="css/demo_table.css" rel="Stylesheet" />
+
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+        <script type="text/javascript" language="javascript" src="js/jquery.dataTables.js"></script>
+        <link rel="stylesheet" href="css/ui.css" type="text/css" media="screen" />        
+
+        <script type="text/javascript" src="js/jquery.form.js"></script>
+        <script type="text/javascript" language="javascript" src="js/ReloadAjax.js"></script>
+
+        <link rel="stylesheet" href="css/index.css" type="text/css" media="screen" />
+    </head>
+    <body>
+        <style>
+            .alert-danger {
+                background-color: #F2DEDE;
+                border-color: #EED3D7;
+                color: #B94A48;
+            }
+            .alert {
+                border: 1px solid transparent;
+                border-radius: 4px 4px 4px 4px;
+                margin-bottom: 20px;
+                padding: 15px;
+            }            
+        </style>
+        
+        <!-- ERRORS BLOCK -->
+        <?php /* if (isset($_SESSION['gError']) && !empty($_SESSION['gError'])) { ?>
+            <?php $cnt = 0; foreach($_SESSION['gError'] as $type => $mData) { ?>
+                <?php if($mData['switchon']) {?>
+                    <div style="right:1%; top:<?php echo ($cnt==0) ? '40' : ($cnt*40); ?>px; width:400px; height: 100px; position: absolute;">
+                        <div class ="alert alert-danger" style =" height: 50px; overflow: auto; ">
+                            <strong>NOTE:</strong><?php echo ' ['.$type.'] '.$mData['message']; ?>
+                        </div>
+                    </div>            
+                <?php $cnt = ($cnt==0) ? $cnt+4 : $cnt+3; } ?>
+            <?php } ?>
+        <?php } */ ?>
+        <!-- /ERRORS BLOCK -->
+        
+        <div class="content">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="brand">WP minisites</div>
+                    
+                        <ul class="nav">
+                            <li <?php echo isset($_GET['cont']) && $_GET['cont'] == 'site' ? 'class="active"' : '' ?>><a href="index.php?cont=site">Sites</a></li>
+                            <li <?php echo !isset($_GET['cont']) || (isset($_GET['cont']) && $_GET['cont'] == 'campaign') ? 'class="active"' : '' ?>><a href="index.php?cont=campaign&act=index">Records</a></li>
+                            <!--<li <?php echo isset($_GET['cont']) && $_GET['cont'] == 'stat' ? 'class="active"' : '' ?>><a href="index.php?cont=stat&act=statcamp">Statistics</a>
+                                <ul>
+                                    <li>
+                                        <a href="index.php?cont=stat&act=statistic">Statistic by site and advertiser</a>
+                                    </li>
+                                </ul>
+                            </li>-->
+                            <!--<li <?php echo isset($_GET['cont']) && $_GET['cont'] == 'blacklists' ? 'class="active"' : '' ?>><a href="index.php?cont=blacklists&act=index">Blacklists</a></li>
+                            <li <?php echo isset($_GET['cont']) && $_GET['cont'] == 'templates' ? 'class="active"' : '' ?>><a href="index.php?cont=templates&act=index">Templates</a></li>-->
+                            <!--<li <?php echo isset($_GET['cont']) && $_GET['cont'] == 'troubleshooting' ? 'class="active"' : '' ?>><a href="#">Troubleshooting</a>
+                                <ul>
+                                    <li>
+                                        <a href="index.php?cont=troubleshooting&act=equalurls" onclick="return false">Advertisers with equal C/T URLs</a>
+                                    </li>
+                                    <li>
+                                        <a href="index.php?cont=troubleshooting&act=missingurls" onclick="return false">Missing advertiser URL's</a>
+                                    </li>
+                                    <li>
+                                        <a href="index.php?cont=troubleshooting&act=ipsforblacklists" onclick="return false">IP's for blacklists</a>
+                                    </li>
+                                    <li>
+                                        <a href="index.php?cont=troubleshooting&act=duplication" onclick="return false">Duplication of posts</a>
+                                    </li>
+                                    <li title='Advertisers which have only one "sub" or "root" category.' >
+                                        <a href="index.php?cont=troubleshooting&act=onemainorsubcat" onclick="return false">Advertisers with wrong categories</a>
+                                    </li>
+                                    <li title='Advertisers which have black squares instead of images in logos' >
+                                        <a href="index.php?cont=troubleshooting&act=blacklogos" onclick="return false">Advertisers with black logos</a>
+                                    </li>
+                                </ul>                                 
+                            </li>-->
+                            <!--<li <?php echo isset($_GET['cont']) && $_GET['cont'] == 'hiding' ? 'class="active"' : '' ?>><a href="index.php?cont=hiding&act=index">Hiding</a></li>-->
+                            <!--<li><a id="settings" href="#">Settings</a>
+                                <ul>
+                                    <li>
+                                        <a href="index.php?cont=login&act=logout">Logout</a>
+                                    </li>
+                                </ul>                            
+                            </li>-->
+                        </ul>
+                    
+                </div>
+            </div>
+        <!-- ERRORS BLOCK -->
+        <?php if (isset($_SESSION['gError']) && !empty($_SESSION['gError'])) { ?>
+            <?php $cnt = 0; foreach($_SESSION['gError'] as $type => $mData) { ?>
+                <?php if($mData['switchon']) {?>
+                    <div style="right:1%; top:<?php echo ($cnt==0) ? '40' : ($cnt*40); ?>px; width:100%; height: 60px; float:right;">
+                        <div class ="alert alert-danger" style =" height: 18px; overflow: auto; ">
+                            <strong>NOTE:</strong><?php echo ' ['.$type.'] '.$mData['message']; ?>
+                        </div>
+                    </div>            
+                <?php $cnt = ($cnt==0) ? $cnt+4 : $cnt+3; } ?>
+            <?php } ?>
+        <?php } ?>
+        <!-- /ERRORS BLOCK -->            
+            <div class="span9">
+                {{content}}
+            </div><!--/span-->
+        </div>
+        <!-- SETTINGS DIALOG WIN -->
+        <div id="settings_dialog">
+            <form action="index.php?cont=site&act=settings" method="post" id="settings_form">
+                <input type="hidden" id="set" name="set" value="set">
+                Administrator data: <br />
+                <hr />
+                <table>
+                    <tr>
+                        <td>
+                            <label for="admin_email">Email: </label>
+                        </td>    
+                        <td>
+                            <input type="text" id="admin_email"  name="admin_email" class="edit_dialog">
+                            <div class="site_errors" id="admin_email_errors" style="display: none; padding-left: 0px;"></div>
+                        </td>                            
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="system_email">System email: </label>
+                        </td>    
+                        <td>
+                            <input type="text" id="system_email"  name="system_email" class="edit_dialog">
+                            <div class="site_errors" id="system_email_errors" style="display: none;  padding-left: 0px;"></div>
+                        </td>                            
+                    </tr>                    
+                </table>               
+            </form>
+        </div>        
+        <!-- /SETTINGS DIALOG WIN -->
+    </body>
+</html>
+

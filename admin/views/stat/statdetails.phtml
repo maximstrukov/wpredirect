@@ -1,0 +1,65 @@
+<?php
+if (!empty($pageTitle)) {
+    $pageTitle = ' - ' . $pageTitle;
+} else {
+    $pageTitle = '';
+}
+
+$message = '';
+if (!empty($_SESSION['message'])) {
+    $message = join('<br />', $_SESSION['message']['text']);
+    $messageStyle = $_SESSION['message']['type'];
+    unset($_SESSION['message']);
+}
+?>
+<style>
+    #edit_dialog label{
+        width:170px;
+        float: left;
+    }
+    #edit_dialog input,#edit_dialog textarea{
+        width:310px;
+    }
+    .error {
+        background-color: #FCC;
+    }
+
+    #edit_form div{
+        padding-bottom: 5px;
+    }
+
+    hr{
+        border: 0;
+        background-color:  #A6C9E2;
+        height: 1px;
+    }
+
+    .ui-icon-cancel, .ui-icon-close {
+        cursor: pointer;
+    }
+    a .ui-icon-circle-plus{
+        float:right;
+    }
+</style>
+
+<div class="content">
+    <?php if (!empty($message)) : ?>
+        <div class="message <?php echo $messageStyle; ?>" >
+        <?php echo $message; ?>                
+        </div>
+        <?php endif; ?>
+
+    <h1><?php echo $type; ?></h1>
+    <table id="table1" class="display" >
+        <thead>
+            <tr>
+                <!--th>LogID</th-->
+                <th>Time</th>
+                <th>IP</th>
+                <th>ISP</th>
+                <th>User Agent</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>

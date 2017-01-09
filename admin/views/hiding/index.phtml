@@ -1,0 +1,93 @@
+<div class="content">
+
+    <div style="text-align: center; font-size: 21px; margin-bottom: 12px;">
+        Hiding Advertisers
+    </div>
+    
+    <a href="#" id="show_edit_accounts_dialog" >Edit accounts</a>
+    <br />
+    <br />
+    <!-- ACCOUNT DIALOGS -->
+    
+    <div id="edit_accounts_dialog" style="display: none;">
+        
+        <input type ="button" onclick="account_edit(); return false;" value="add"/>
+        
+        <table id="account_manager_table" class="display" >
+            <thead>  
+                <tr>
+                    <th>Account</th>
+                    <th>Rule</th>
+                    <th>Act</th>
+                </tr>
+            </thead>                
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    
+    <div id="account_edit" style="display: none;">
+        <form action="index.php?cont=hiding&act=editaccount" method="POST" id="account_edit_form" >
+            <input type="hidden" name="account_id" value="" id="edit_account_id" />
+            <label for ="name">Account name: </label>
+            <br />
+            <input type="text" name="name" value="" id="name"/>
+            <br />
+            <label for ="rule">Rule: </label>
+            <br />
+            <textarea name="rule" id ="rule" style="width: 362px; height: 97px;" ></textarea>
+        </form>    
+    </div>
+    
+    <!-- /ACCOUNT DIALOGS -->
+    
+    
+    <table id="site_list_table" class="display" >
+        <thead>  
+            <tr>
+                <th>Site</th>
+                <th>Сountry</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($sites as $key => $sItem) { ?>
+                <tr>
+                    <td><?php echo $sItem['domain']; ?></td>
+                    <td><?php echo $sItem['country']; ?></td>
+                    <td><?php echo $sItem['email']; ?></td>
+                    <td> <a href="#" onclick="openEditDialog(<?php echo $sItem['id']; ?>, '<?php echo $sItem['domain']; ?>'); return false;">Hide/Show</a></td>
+                </tr>            
+            <?php } ?>
+        </tbody>
+    </table>
+    
+    <div id="edit_dialog" style="display: none">
+        <h3>Please select an account: </h3> 
+        <form action="index.php?cont=hiding&act=run" method="post" id="edit_form">
+                <input type="hidden" name="site_id" value="" id="site_id">
+                <ul id="account_list" style="list-style-type: none;">
+                </ul>    
+        </form>    
+    </div>
+    
+    <div id="delete_account">
+        <form action="index.php?cont=hiding&act=deleteaccount" method="post" id="delete_account_form">
+            <input type="hidden" id="account_id" name="id" value="">
+            <div>
+                Delete "<span id ="account_name" ></span>" account ?
+            </div>
+        </form>
+    </div>    
+    
+    <div id="dry-mode-data">
+        <h3>Advertisers list:</h3>
+        <div id="adv_list" style="height:500px; overflow:auto;">
+            <div id='adv_list_info' style="margin-left:10%"></div>
+            <ul id="dry-mode-data_list" style="list-style-type:decimal;">
+            </ul>    
+        </div>
+    </div>    
+    
+</div>

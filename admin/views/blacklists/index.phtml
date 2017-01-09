@@ -1,0 +1,61 @@
+<div class="content">
+    <input type="button" id="add_button" value="CREATE NEW BLACKLIST">
+
+    <table id="blacklist_table" class="display" >
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th style="width:80px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div id="edit_dialog">
+    <form action="index.php?cont=blacklists&act=save" method="post" id="edit_form">
+        
+        <input type="hidden" id="id" name="id" value="">
+        
+        <div>
+            <label for="name">Name: </label>
+            <input type="text" id="name" placeholder="Black list name" value=""  name="name" class="edit_dialog">
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="name_errors" style="display: none"></div>
+        </div>
+        
+        <div>
+            <label for="type">Type: </label>
+            <select id="type" name="type" >
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+                <option value="private_tu">Private W/TU</option>
+            </select>
+        </div>
+        
+        <div>
+            <label for="ips_data">IPs: </label>
+            <textarea id="ips_data" name="ips_data" placeholder="Add IPs" class="edit_dialog" style="width: 311px; height: 248px;" ></textarea>
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="ips_data_errors" style="display: none"></div>
+        </div>
+        
+        <div id ="tu_data_wrap">
+            <label for="tu_data">Auto apply to advertisers containing Tracking URL: </label>
+            <textarea id="tu_data" name="tu_data" placeholder='For example: "google.com, ebay.com"' class="edit_dialog" style="width: 311px; height: 248px;" ></textarea>
+            <span class="ui-icon ui-icon-close" style="float: right;"></span>
+            <div class="site_errors" id="urls_data_errors" style="display: none"></div>
+        </div>
+             
+    </form>
+</div>
+
+<div id="delete_dialog">
+    <form action="index.php?cont=blacklists&act=delete" method="post" id="delete_form">
+        <input type="hidden" id="del_blacklist_id" name="id" value="">
+        <div>
+            Are you sure you want to remove "<span id="blacklist_name"></span>" black list?
+        </div>
+    </form>
+</div>
