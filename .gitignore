@@ -1,0 +1,8 @@
+# Local configs
+config.php
+
+# Binary gettext files
+*.mo
+
+# Data
+data/db/
